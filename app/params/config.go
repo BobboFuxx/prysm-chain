@@ -16,7 +16,7 @@ const (
 	// 1 DYM = 1x10^{BaseDenomUnit} udym
 	BaseDenomUnit = 6
 
-	AccountAddressPrefix = "prysm1"
+	AccountAddressPrefix = "prysm"
 	Name                 = "prysm"
 )
 
