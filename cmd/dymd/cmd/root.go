@@ -55,16 +55,8 @@ func NewRootCmd() (*cobra.Command, appparams.EncodingConfig) {
 		WithViper("")
 
 	rootCmd := &cobra.Command{
-		Use: "dymd",
-		Short: `
-______   __   __  __   __  _______  __    _  _______  ___   _______  __    _    __   __  __   __  _______
-|      | |  | |  ||  |_|  ||       ||  |  | ||       ||   | |       ||  |  | |  |  | |  ||  | |  ||  _    |
-|  _    ||  |_|  ||       ||    ___||   |_| ||  _____||   | |   _   ||   |_| |  |  |_|  ||  | |  || |_|   |
-| | |   ||       ||       ||   |___ |       || |_____ |   | |  | |  ||       |  |       ||  |_|  ||       |
-| |_|   ||_     _||       ||    ___||  _    ||_____  ||   | |  |_|  ||  _    |  |       ||       ||  _   |
-|       |  |   |  | ||_|| ||   |___ | | |   | _____| ||   | |       || | |   |  |   _   ||       || |_|   |
-|______|   |___|  |_|   |_||_______||_|  |__||_______||___| |_______||_|  |__|  |__| |__||_______||_______|
-		`,
+		Use:   "pymd",
+		Short: `Prysm Application`,
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
