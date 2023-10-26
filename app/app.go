@@ -275,10 +275,10 @@ func init() {
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+appparams.Name)
 
-	var BaseDenomUnit int64 = 18
+	var BaseDenomUnit int64 = 6
 	originalPoweReduction := new(big.Int).Exp(big.NewInt(10), big.NewInt(BaseDenomUnit), nil)
 
-	var TokensToStake int64 = 100000 //100K DYM minimal stake
+	var TokensToStake int64 = 100000 //100K PYM minimal stake
 	sdk.DefaultPowerReduction = sdkmath.NewIntFromBigInt(originalPoweReduction.Mul(originalPoweReduction, big.NewInt(TokensToStake)))
 
 }
@@ -582,7 +582,7 @@ func New(
 		),
 	)
 
-	//--------------- dYmension specific modules
+	//--------------- prysm specific modules
 	app.RollappKeeper = *rollappmodulekeeper.NewKeeper(
 		appCodec,
 		keys[rollappmoduletypes.StoreKey],

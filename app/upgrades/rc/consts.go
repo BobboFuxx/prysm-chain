@@ -10,23 +10,23 @@ const (
 
 var (
 	DYMTokenMetata = banktypes.Metadata{
-		Description: "Denom metadata for DYM (udym)",
+		Description: "Denom metadata for PYM (upym)",
 		DenomUnits: []*banktypes.DenomUnit{
 			{
-				Denom:    "udym",
+				Denom:    "upym",
 				Exponent: 0,
 				Aliases:  []string{},
 			},
 			{
-				Denom:    "DYM",
-				Exponent: 18,
+				Denom:    "PYM",
+				Exponent: 6,
 				Aliases:  []string{},
 			},
 		},
-		Base:    "udym",
-		Display: "DYM",
-		Name:    "DYM",
-		Symbol:  "DYM",
+		Base:    "upym",
+		Display: "PYM",
+		Name:    "PYM",
+		Symbol:  "PYM",
 		URI:     "",
 		URIHash: "",
 	}
