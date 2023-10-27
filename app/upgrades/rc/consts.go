@@ -9,7 +9,7 @@ const (
 )
 
 var (
-	DYMTokenMetata = banktypes.Metadata{
+	PYMTokenMetata = banktypes.Metadata{
 		Description: "Denom metadata for PYM (upym)",
 		DenomUnits: []*banktypes.DenomUnit{
 			{
