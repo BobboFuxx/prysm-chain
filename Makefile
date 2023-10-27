@@ -80,11 +80,11 @@ all: install
 
 .PHONY: install
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/dymd
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/prysmd
 
 .PHONY: build
 build: go.sum
-	go build $(BUILD_FLAGS) -o build/prysmd ./cmd/dymd
+	go build $(BUILD_FLAGS) -o build/prysmd ./cmd/prysmd
 
 
 
