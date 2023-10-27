@@ -20,7 +20,7 @@ func CreateUpgradeHandler(
 		// - https://docs.cosmos.network/master/building-modules/upgrade.html#registering-migrations
 		// - https://docs.cosmos.network/master/migrations/chain-upgrade-guide-044.html#chain-upgrade
 
-		bk.SetDenomMetaData(ctx, DYMTokenMetata)
+		bk.SetDenomMetaData(ctx, PYMTokenMetata)
 
 		// Leave modules are as-is to avoid running InitGenesis.
 		logger.Debug("running module migrations ...")
