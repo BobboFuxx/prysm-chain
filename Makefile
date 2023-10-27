@@ -51,8 +51,8 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=pym \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=pymd \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=prysmd \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=prysmd \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
@@ -84,7 +84,7 @@ install: go.sum
 
 .PHONY: build
 build: go.sum
-	go build $(BUILD_FLAGS) -o build/pymd ./cmd/dymd
+	go build $(BUILD_FLAGS) -o build/prysmd ./cmd/dymd
 
 
 
