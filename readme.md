@@ -32,7 +32,7 @@ KEYRING_BACKEND="test"
 ```
 
 prysmd keys add $VALIDATOR --keyring-backend test 
-MY_VALIDATOR_ADDRESS=$(prysmd keys ow $VALIDATOR -a --keyring-backend test)
+MY_VALIDATOR_ADDRESS=$(prysmd keys show $VALIDATOR -a --keyring-backend test)
 ```
 ## Step 7: Initialize Prysm with Moniker and Chain ID
 ```
