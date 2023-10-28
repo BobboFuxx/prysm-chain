@@ -30,30 +30,24 @@ KEYRING_BACKEND="test"
 ```
 ## Step 6: Generate Keys and Save Address/Seed
 ```
-
 prysmd keys add $VALIDATOR --keyring-backend test 
 MY_VALIDATOR_ADDRESS=$(prysmd keys show $VALIDATOR -a --keyring-backend test)
 ```
 ## Step 7: Initialize Prysm with Moniker and Chain ID
 ```
-
-
 prysmd init $MONIKER --chain-id $CHAIN_ID
 ```
-## Step 8: Update Stake Denomination in genesis.json
+## Step 8: Download genesis.json
 ```
-
-sed -i 's/stake/upym/g' ~/.prysm/config/genesis.json
+wget -O ~/.prysm/config/genesis.json https://github.com/BobboFuxx/prysm-testnet/raw/main/genesis.json
 ```
 ## Step 9: Update client.toml Configuration
 ```
-
 sed -i "s/chain-id = \".*\"/chain-id = \"$CHAIN_ID\"/g" ~/.prysm/config/client.toml
 sed -i "s/keyring-backend = \".*\"/keyring-backend = \"$KEYRING_BACKEND\"/g" ~/.prysm/config/client.toml
 ```
 ## Step 10: Create Systemd Service for Prysm
 ```
-
 SERVICE_FILE="/etc/systemd/system/prysmd.service"
 
 echo "[Unit]
@@ -78,8 +72,6 @@ sudo systemctl start prysmd.service
 ```
 ## Step 11: Verify Prysm Service Status
 ```
-
-
 sudo journalctl -f -u prysmd -o cat
 ```
 ## Step 12: Request Testnet Coins
@@ -89,8 +81,6 @@ Next, request testnet coins to your validator's wallet address
 
 ## Step 13: Create and Run the Validator
 ```
-
-
 # Step 1: Generate your validator key
 prysmd tx staking create-validator \
   --amount=1000000000upym \
