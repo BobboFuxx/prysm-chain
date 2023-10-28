@@ -1,154 +1,132 @@
-# Dymension Hub
+<!DOCTYPE html>
+<html lang="en">
 
-![image](./docs/dymension.png)
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prysm Validator Setup Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+        }
 
-![license](https://img.shields.io/github/license/dymensionxyz/dymension)
-![Go](https://img.shields.io/badge/go-1.18-blue.svg)
-![issues](https://img.shields.io/github/issues/dymensionxyz/dymension)
-![tests](https://github.com/dymensionxyz/dymint/actions/workflows/test.yml/badge.svg?branch=main)
-![lint](https://github.com/dymensionxyz/dymint/actions/workflows/lint.yml/badge.svg?branch=main)
+        h1, h2 {
+            color: #007bff;
+        }
 
-## Overview
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
 
-Welcome to the Dymension Hub, the **Settlement Layer of the Dymension protocol**.
+<body>
 
-This guide will walk you through the steps required to set up and run a Dymension Hub full node.
+    <h1>Prysm Validator Setup Guide</h1>
 
-## Table of Contents
+    <h2>Prerequisites</h2>
+    <p><strong>Install Go:</strong> Visit the <a href="https://golang.org/dl/">official Go installation page</a> to
+        download and install Go. Verify your installation by running <code>go version</code> in the terminal.</p>
 
-- [Dymension Hub](#dymension-hub)
-  - [Overview](#overview)
-  - [Table of Contents](#table-of-contents)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Initializing `dymd`](#initializing-dymd)
-  - [Running the Chain](#running-the-chain)
-  - [Adding liquidity](#adding-liquidity)
-  - [Adding incentives](#adding-incentives)
-    - [Setting incentivised pools and weights](#setting-incentivised-pools-and-weights)
-    - [Locking tokens](#locking-tokens)
-    - [Fund the incentives](#fund-the-incentives)
+    <h2>Step 1: Clone Prysm Chain Repository</h2>
+    <pre><code>git clone https://github.com/BobboFuxx/prysm-chain/</code></pre>
 
-## Prerequisites
+    <h2>Step 2: Navigate to Prysm Chain Directory</h2>
+    <pre><code>cd prysm-chain</code></pre>
 
-- [Go (v1.18 or above)](https://go.dev/doc/install)
+    <h2>Step 3: Build Prysm</h2>
+    <pre><code>make build</code></pre>
 
-## Installation
+    <h2>Step 4: Make Prysm Binary Executable and Move It</h2>
+    <pre><code>chmod +x build/prysmd<br>mv build/prysmd ~/go/bin/prysmd</code></pre>
 
-Clone `dymension`:
+    <h2>Step 5: Configure Your Validator</h2>
+    <pre><code>
+CHAIN_ID="prysm_100-1"
+MONIKER="insert_your_moniker_here"
+VALIDATOR="validatorname"
+KEYRING_BACKEND="test"
+    </code></pre>
 
-```sh
-git clone https://github.com/dymensionxyz/dymension.git
-cd dymension
-make install
-```
+    <h2>Step 6: Generate Keys and Save Address/Seed</h2>
+    <pre><code>
+prysmd keys add $VALIDATOR --keyring-backend test 
+MY_VALIDATOR_ADDRESS=$(prysmd keys show $VALIDATOR -a --keyring-backend test)
+    </code></pre>
 
-Check that the dymd binaries have been successfully installed:
+    <h2>Step 7: Initialize Prysm with Moniker and Chain ID</h2>
+    <pre><code>prysmd init $MONIKER --chain-id $CHAIN_ID</code></pre>
 
-```sh
-dymd version
-```
+    <h2>Step 8: Update Stake Denomination in genesis.json</h2>
+    <pre><code>
+sed -i 's/stake/upym/g' ~/.prysm/config/genesis.json
+    </code></pre>
 
-If the dymd command is not found an error message is returned,
-confirm that your [GOPATH](https://go.dev/doc/gopath_code#GOPATH) is correctly configured by running the following command:
+    <h2>Step 9: Update client.toml Configuration</h2>
+    <pre><code>
+sed -i "s/chain-id = \".*\"/chain-id = \"$CHAIN_ID\"/g" ~/.prysm/config/client.toml
+sed -i "s/keyring-backend = \".*\"/keyring-backend = \"$KEYRING_BACKEND\"/g" ~/.prysm/config/client.toml
+    </code></pre>
 
-```sh
-export PATH=$PATH:$(go env GOPATH)/bin
-```
+    <h2>Step 10: Create Systemd Service for Prysm</h2>
+    <pre><code>
+SERVICE_FILE="/etc/systemd/system/prysmd.service"
 
-## Initializing `dymd`
+echo "[Unit]
+Description=Prysm Chain
+After=network.target
 
-- Using the setup script:
+[Service]
+Type=simple
+ExecStart=$(command -v prysmd) start
+WorkingDirectory=$(eval echo ~$(whoami))
+User=$(whoami)
+StartLimitInterval=0
+RestartSec=3
+Restart=on-failure
 
-    This method is preffered as it preconfigured to support [running rollapps locally](https://github.com/dymensionxyz/roller)
+[Install]
+WantedBy=multi-user.target" | sudo tee $SERVICE_FILE > /dev/null
 
-    ```sh
-    bash scripts/setup_local.sh
-    ```
+sudo systemctl daemon-reload
+sudo systemctl enable prysmd.service
+sudo systemctl start prysmd.service
+    </code></pre>
 
-- Manually:
+    <h2>Step 11: Verify Prysm Service Status</h2>
+    <pre><code>
+sudo journalctl -f -u prysmd -o cat
+    </code></pre>
 
-    First, set the following environment variables:
+    <h2>Step 12: Request Testnet Coins</h2>
+    <p>Next, request testnet coins to your validator's wallet address (<code>$MY_VALIDATOR_ADDRESS</code>).</p>
 
-    ```sh
-    export CHAIN_ID="dymension_100-1"
-    export KEY_NAME="local-user"
-    export MONIKER_NAME="local"
-    ```
+    <h2>Step 13: Create and Run the Validator</h2>
+    <pre><code>
+# Step 1: Generate your validator key
+prysmd tx staking create-validator \
+  --amount=1000000000upym \
+  --pubkey=$(prysmd tendermint show-validator) \
+  --moniker=$MONIKER \
+  --chain-id=$CHAIN_ID \
+  --commission-max-change-rate="0.01" \
+  --commission-max-rate="0.1" \
+  --commission-rate="0.07" \
+  --min-self-delegation="1" \
+  --gas="auto" \
+  --gas-adjustment="1.2" \
+  --gas-prices="0.025upym" \
+  --from=$VALIDATOR --keyring-backend test
 
-    Then, initialize a chain with a user:
+# Step 2: Start your validator
+prysmd tx staking start-validator \
+  --from=$VALIDATOR --keyring-backend test
+    </code></pre>
 
-    ```sh
-    dymd init "$MONIKER_NAME" --chain-id "$CHAIN_ID"
-    dymd keys add "$KEY_NAME" --keyring-backend test
-    dymd add-genesis-account "$(dymd keys show "$KEY_NAME" -a --keyring-backend test)" 100000000000udym
-    dymd gentx "$KEY_NAME" 1000000dym --chain-id "$CHAIN_ID" --keyring-backend test
-    dymd collect-gentxs
-    ```
-
-## Running the Chain
-
-Now start the chain!
-
-```sh
-dymd start
-```
-
-You should have a running local node!
-
-## Adding liquidity
-
-To bootstrap the `GAMM` module with pools:
-
-```sh
-sh scripts/pools/pools_bootstrap.sh
-```
-
-## Adding incentives
-
-### Setting incentivised pools and weights
-
-After creating the pools above, set the incentives weights through gov:
-
-```sh
-sh scripts/incentives/incentive_pools_bootstrap.sh
-```
-
-wait for the gov proposal to pass, and valitate with:
-
-```sh
-dymd q poolincentives distr-info
-```
-
-### Locking tokens
-
-To get incentives, we need to lock the LP tokens:
-
-```sh
-sh scripts/incentives/lockup_bootstrap.sh
-```
-
-Valitate with:
-
-```sh
-dymd q lockup module-balance
-```
-
-### Fund the incentives
-
-Now we fund the pool incentives.
-The funds will be distributed between the incentivised pools according to weights.
-The following script funds the pool incentives both by external funds (direct funds transfer from some user)
-and using the community pool (using gov proposal)
-
-```sh
-sh scripts/incentives/fund_incentives.sh
-```
-
-validate with:
-
-```sh
-dymd q incentives gauges
-```
-
-If you have any issues please contact us on [discord](http://discord.gg/dymension) in the Developer section. We are here for you!
+    <p>You have now set up and started your Prysm validator on the Prysm chain. Remember
