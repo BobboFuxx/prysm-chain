@@ -5,24 +5,24 @@
 Visit the [official Go installation page](https://golang.org/dl/) to download and install Go. Verify your installation by running `go version` in the terminal.
 
 ## Step 1: Clone Prysm Chain Repository
-```sh
+```
 git clone https://github.com/BobboFuxx/prysm-chain/
 ```
 ## Step 2: Navigate to Prysm Chain Directory
-```sh
+```
 cd prysm-chain
 ```
 ## Step 3: Build Prysm
-```sh
+```
 make build
 ```
 ## Step 4: Make Prysm Binary Executable and Move It
-```sh
+```
 chmod +x build/prysmd
 mv build/prysmd ~/go/bin/prysmd
 ```
 ## Step 5: Configure Your Node
-```sh
+```
 CHAIN_ID="prysm_100-1"
 MONIKER="insert_your_moniker_here"
 VALIDATOR="validatorname"
@@ -30,19 +30,19 @@ KEYRING_BACKEND="test"
 ```
 ## Step 6: Generate Keys and Save Address/Seed
 ```
-sh
+
 prysmd keys add $VALIDATOR --keyring-backend test 
-MY_VALIDATOR_ADDRESS=$(prysmd keys show $VALIDATOR -a --keyring-backend test)
+MY_VALIDATOR_ADDRESS=$(prysmd keys ow $VALIDATOR -a --keyring-backend test)
 ```
 ## Step 7: Initialize Prysm with Moniker and Chain ID
 ```
-sh
+
 
 prysmd init $MONIKER --chain-id $CHAIN_ID
 ```
 ## Step 8: Update Stake Denomination in genesis.json
 ```
-sh
+
 sed -i 's/stake/upym/g' ~/.prysm/config/genesis.json
 ```
 ## Step 9: Update client.toml Configuration
@@ -52,7 +52,7 @@ sed -i "s/chain-id = \".*\"/chain-id = \"$CHAIN_ID\"/g" ~/.prysm/config/client.t
 sed -i "s/keyring-backend = \".*\"/keyring-backend = \"$KEYRING_BACKEND\"/g" ~/.prysm/config/client.toml
 ```
 ## Step 10: Create Systemd Service for Prysm
-```sh
+```
 
 SERVICE_FILE="/etc/systemd/system/prysmd.service"
 
@@ -78,7 +78,7 @@ sudo systemctl start prysmd.service
 ```
 ## Step 11: Verify Prysm Service Status
 ```
-sh
+
 
 sudo journalctl -f -u prysmd -o cat
 ```
@@ -89,12 +89,12 @@ Next, request testnet coins to your validator's wallet address
 
 ## Step 13: Create and Run the Validator
 ```
-sh
+
 
 # Step 1: Generate your validator key
 prysmd tx staking create-validator \
   --amount=1000000000upym \
-  --pubkey=$(prysmd tendermint show-validator) \
+  --pubkey=$(prysmd tendermint ow-validator) \
   --moniker=$MONIKER \
   --chain-id=$CHAIN_ID \
   --commission-max-change-rate="0.01" \
