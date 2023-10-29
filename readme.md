@@ -81,10 +81,10 @@ Next, request testnet coins to your validator's wallet address
 
 ## Step 13: Create and Run the Validator
 ```
-# Step 1: Generate your validator key
+# Generate your validator key
 prysmd tx staking create-validator \
   --amount=1000000000upym \
-  --pubkey=$(prysmd tendermint ow-validator) \
+  --pubkey=$(prysmd tendermint show-validator) \
   --moniker=$MONIKER \
   --chain-id=$CHAIN_ID \
   --commission-max-change-rate="0.01" \
