@@ -8,13 +8,13 @@ import (
 
 const (
 	// DisplayDenom is the denomination used to display the amount of tokens heldbuild
-	DisplayDenom = "pym"
+	DisplayDenom = "prysm"
 	// BaseDenomUnit is the base denom unit for the Hub
-	BaseDenom = "upym"
+	BaseDenom = "uprysm"
 
 	// BaseDenomUnit defines the base denomination unit for Photons.
-	// 1 DYM = 1x10^{BaseDenomUnit} udym
-	BaseDenomUnit = 6
+	// 1 PRYSM = 1x10^{BaseDenomUnit} uprysm
+	BaseDenomUnit = 18
 
 	AccountAddressPrefix = "prysm"
 	Name                 = "prysm"
